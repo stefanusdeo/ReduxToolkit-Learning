@@ -5,6 +5,7 @@ import Layout from './components/Layout/Layout';
 import Products from './components/Shop/Products';
 import Notification from './components/Notification/Notification';
 import { uiActions } from './redux/ui-slice';
+import { sendCartData } from './redux/cart-slice';
 
 let initialValue = true;
 
@@ -15,46 +16,13 @@ function App() {
   const notification = useSelector((state) => state.ui.notification);
 
   useEffect(() => {
-    const fetchData = async () => {
-      dispatch(
-        uiActions.showNotification({
-          status: 'pending',
-          message: 'On Process',
-          title: 'Sending...',
-        })
-      );
-      const response = await fetch(
-        'https://resto-app-99fee-default-rtdb.asia-southeast1.firebasedatabase.app/cart.json',
-        { method: 'PUT', body: JSON.stringify(cart) }
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed sending data');
-      }
-
-      dispatch(
-        uiActions.showNotification({
-          status: 'success',
-          message: 'item added.',
-          title: 'Success!!',
-        })
-      );
-    };
-
     if (initialValue) {
       initialValue = false;
       return;
     }
 
-    fetchData().catch(() => {
-      dispatch(
-        uiActions.showNotification({
-          status: 'error',
-          message: 'Sending item to cart failed',
-          title: 'Error',
-        })
-      );
-    });
+    dispatch(sendCartData(cart));
+
   }, [cart, dispatch]);
 
   return (
