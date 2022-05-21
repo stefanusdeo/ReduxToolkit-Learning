@@ -4,8 +4,7 @@ import Cart from './components/Cart/Cart';
 import Layout from './components/Layout/Layout';
 import Products from './components/Shop/Products';
 import Notification from './components/Notification/Notification';
-import { uiActions } from './redux/ui-slice';
-import { sendCartData } from './redux/cart-slice';
+import { fetchCartData, sendCartData } from './redux/cart-actions';
 
 let initialValue = true;
 
@@ -17,12 +16,12 @@ function App() {
 
   useEffect(() => {
     if (initialValue) {
+      dispatch(fetchCartData());
       initialValue = false;
       return;
     }
 
     dispatch(sendCartData(cart));
-
   }, [cart, dispatch]);
 
   return (
