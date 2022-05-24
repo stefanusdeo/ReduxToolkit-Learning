@@ -18,8 +18,12 @@ export const fetchCartData = () => {
 
     try {
       const data = await fetchData();
-      dispatch(cartActions.replaceCart(data));
-      console.log(data);
+      dispatch(
+        cartActions.replaceCart({
+          items: data.items || [],
+          totalQuantity: data.totalQuantity,
+        })
+      );
     } catch (error) {
       dispatch(
         uiActions.showNotification({
@@ -45,7 +49,13 @@ export const sendCartData = (cart) => {
     const sendRequest = async () => {
       const response = await fetch(
         'https://resto-app-99fee-default-rtdb.asia-southeast1.firebasedatabase.app/cart.json',
-        { method: 'PUT', body: JSON.stringify(cart) }
+        {
+          method: 'PUT',
+          body: JSON.stringify({
+            items: cart.item,
+            totalQuantity: cart.totalQuantity,
+          }),
+        }
       );
 
       if (!response.ok) {
